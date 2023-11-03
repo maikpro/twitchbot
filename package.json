@@ -1,0 +1,36 @@
+{
+    "name": "twitchbot",
+    "version": "1.0.0",
+    "description": "A Bot for Twitch.tv",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc",
+        "prod": "node src",
+        "start": "node -r ts-node/register --env-file=.env src",
+        "dev": "nodemon src -e ts,json --exec \"npm start\"",
+        "lint": "eslint src",
+        "format": "npx prettier --write src",
+        "format:check": "npx prettier --check src"
+    },
+    "keywords": [],
+    "author": "Maik",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.20",
+        "@types/node": "^20.8.10",
+        "@typescript-eslint/eslint-plugin": "^6.7.4",
+        "@typescript-eslint/parser": "^6.7.4",
+        "eslint": "^8.50.0",
+        "eslint-config-prettier": "^9.0.0",
+        "nodemon": "^3.0.1",
+        "prettier": "^3.0.3",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.2.2"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "open": "^9.1.0",
+        "passport": "^0.6.0",
+        "save-dev": "^0.0.1-security"
+    }
+}
