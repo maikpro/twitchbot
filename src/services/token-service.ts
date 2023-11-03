@@ -1,11 +1,21 @@
 import { TwitchToken } from '../models/TwitchToken';
 
-export class TokenService {
+export class AuthService {
+    public static createAuthorizeUrl(): URL {
+        const authorizeUrl: URL = new URL(process.env.AUTHORIZE_URL!);
+        authorizeUrl.searchParams.append('response_type', 'code');
+        authorizeUrl.searchParams.append('client_id', process.env.CLIENT_ID!);
+        authorizeUrl.searchParams.append('redirect_uri', process.env.REDIRECT_URI!);
+        authorizeUrl.searchParams.append('scope', 'chat:read chat:edit');
+        authorizeUrl.searchParams.append('state', 'someState');
+        return authorizeUrl;
+    }
+
     public static async getToken(authCode: string): Promise<TwitchToken> {
         const clientId = process.env.CLIENT_ID;
         const clientSecret = process.env.CLIENT_SECRET;
         const tokenUrl = process.env.TOKEN_URL;
-        const redirectUri = process.env.SERVER_URL;
+        const redirectUri = process.env.REDIRECT_URI;
 
         if (!clientId || !clientSecret || !tokenUrl || !redirectUri) {
             throw 'Some values are missing in .env to create a token';
