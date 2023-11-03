@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from '../services/token-service';
 import { TwitchToken } from '../models/TwitchToken';
 
@@ -8,7 +8,6 @@ export const auth = async (req: Request, res: Response) => {
     // Started Login Process
     if (req.query.code && !token) {
         token = await AuthService.getToken(req.query.code.toString());
-        //res.status(200).send("Login successfully: <a href='/auth/token'>See the token</a>");
         res.redirect('/');
         console.log(`New Twitch Token has been generated: ${token}`);
     }
