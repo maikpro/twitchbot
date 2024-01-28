@@ -1,18 +1,17 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/token-service';
-import { TwitchToken } from '../models/TwitchToken';
-
-let token: TwitchToken | null = null;
+import { TwitchService } from '../services/twitch-service';
 
 export const auth = async (req: Request, res: Response) => {
     // Started Login Process
-    if (req.query.code && !token) {
-        token = await AuthService.getToken(req.query.code.toString());
+    if (req.query.code && !AuthService.getToken()) {
+        AuthService.setToken(await AuthService.createToken(req.query.code.toString()));
+        TwitchService.connect();
         res.redirect('/');
-        console.log(`New Twitch Token has been generated: ${token}`);
+        console.log(`New Twitch Token has been generated: ${AuthService.getToken()?.access_token}`);
     }
     // logged in
-    else if (token) {
+    else if (AuthService.getToken()) {
         res.status(200).send(
             "You're logged in: <a href='/auth/token'>See the token</a>" +
                 '<br>' +
@@ -26,16 +25,17 @@ export const auth = async (req: Request, res: Response) => {
 };
 
 export const getToken = (req: Request, res: Response) => {
-    if (token) {
-        res.status(200).contentType('json').send(token);
+    if (AuthService.getToken()) {
+        res.status(200).contentType('json').send(AuthService.getToken());
     } else {
         res.status(404).send(`No Token found try to <a href=${AuthService.createAuthorizeUrl()}>Login</a>`);
     }
 };
 
 export const validate = async (req: Request, res: Response) => {
-    if (token) {
-        const result = await AuthService.validate(token.access_token);
+    const twitchToken = AuthService.getToken();
+    if (twitchToken) {
+        const result = await AuthService.validate(twitchToken.access_token);
         res.status(200).send(result);
     } else {
         res.status(404).send(`No Token found try to <a href=${AuthService.createAuthorizeUrl()}>Login</a>`);

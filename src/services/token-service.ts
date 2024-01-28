@@ -1,6 +1,8 @@
 import { TwitchToken } from '../models/TwitchToken';
 
 export class AuthService {
+    private static token: TwitchToken | null = null;
+
     public static createAuthorizeUrl(): URL {
         const authorizeUrl: URL = new URL(process.env.AUTHORIZE_URL!);
         authorizeUrl.searchParams.append('response_type', 'code');
@@ -11,7 +13,7 @@ export class AuthService {
         return authorizeUrl;
     }
 
-    public static async getToken(authCode: string): Promise<TwitchToken> {
+    public static async createToken(authCode: string): Promise<TwitchToken> {
         const clientId = process.env.CLIENT_ID;
         const clientSecret = process.env.CLIENT_SECRET;
         const tokenUrl = process.env.TOKEN_URL;
@@ -57,5 +59,13 @@ export class AuthService {
         }
 
         return await response.json();
+    }
+
+    public static getToken() {
+        return this.token;
+    }
+
+    public static setToken(token: TwitchToken) {
+        this.token = token;
     }
 }
