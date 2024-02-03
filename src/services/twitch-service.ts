@@ -1,3 +1,4 @@
+import { ParserService } from './parser-service';
 import { AuthService } from './token-service';
 import WebSocket from 'ws';
 
@@ -43,6 +44,11 @@ export class TwitchService {
                 ws.send('PONG :tmi.twitch.tv');
             } else {
                 console.log('Received message:', message);
+                const twitchMessage = ParserService.parse(message);
+
+                if (twitchMessage) {
+                    console.log(twitchMessage);
+                }
             }
         });
 
